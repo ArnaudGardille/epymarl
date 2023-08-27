@@ -55,7 +55,7 @@ pip install git+https://github.com/oxwhirl/smac.git
 
 Example of using LBF:
 ```sh
-python3 src/main.py --config=qmix --env-config=gymma with env_args.time_limit=25 env_args.key="lbforaging:Foraging-8x8-2p-3f-v1"
+python3 src/main.py --config=qmix --env-config=gymma with env_args.time_limit=25 env_args.key="lbforaging:Foraging-8x8-2p-3f-v2"
 ```
 Example of using RWARE:
 ```sh
