@@ -8,6 +8,8 @@ from types import SimpleNamespace as SN
 from utils.logging import Logger
 from utils.timehelper import time_left, time_str
 from os.path import dirname, abspath
+import numpy as np
+import pandas as pd
 
 from learners import REGISTRY as le_REGISTRY
 from runners import REGISTRY as r_REGISTRY
@@ -15,12 +17,10 @@ from controllers import REGISTRY as mac_REGISTRY
 from components.episode_buffer import ReplayBuffer
 from components.transforms import OneHot
 
-
 def run(_run, _config, _log):
 
     # check args sanity
     _config = args_sanity_check(_config, _log)
-
     args = SN(**_config)
     args.device = "cuda" if args.use_cuda else "cpu"
 
@@ -52,7 +52,11 @@ def run(_run, _config, _log):
     logger.setup_sacred(_run)
 
     # Run and train
-    run_sequential(args=args, logger=logger)
+    results = run_sequential(args=args, logger=logger)
+
+    tb_exp_direc
+
+
 
     # Clean up after finishing
     print("Exiting Main")
@@ -103,9 +107,12 @@ def run_sequential(args, logger):
             "dtype": th.int,
         },
         "reward": {"vshape": (1,)},
+        "epsilon": {"vshape": (1,)},
+        "pick_random": {"vshape": (env_info["n_agents"],)},
         "priority": {"vshape": (1,)},
         "terminated": {"vshape": (1,), "dtype": th.uint8},
     }
+    pprint.pprint(scheme)
     groups = {"agents": args.n_agents}
     preprocess = {"actions": ("actions_onehot", [OneHot(out_dim=args.n_actions)])}
 
@@ -177,13 +184,15 @@ def run_sequential(args, logger):
 
     start_time = time.time()
     last_time = start_time
-
+    evaluation_times = []
+    mean_episodes_return = []
+    std_episodes_return = []
     logger.console_logger.info("Beginning training for {} timesteps".format(args.t_max))
 
     while runner.t_env <= args.t_max:
 
         # Run for a whole episode at a time
-        episode_batch = runner.run(test_mode=False)
+        episode_batch, _ = runner.run(test_mode=False)
         buffer.insert_episode_batch(episode_batch)
 
         if buffer.can_sample(args.batch_size):
@@ -214,8 +223,14 @@ def run_sequential(args, logger):
             last_time = time.time()
 
             last_test_T = runner.t_env
+
+            evaluation_times.append(runner.t_env)
+            episodes_returns = []
             for _ in range(n_test_runs):
-                runner.run(test_mode=True)
+                __, episode_return = runner.run(test_mode=True)
+                episodes_returns.append(episode_return)
+            mean_episodes_return.append(np.mean(episodes_returns))
+            std_episodes_return.append(np.std(episodes_returns))
 
         if args.save_model and (
             runner.t_env - model_save_time >= args.save_model_interval
@@ -242,6 +257,13 @@ def run_sequential(args, logger):
 
     runner.close_env()
     logger.console_logger.info("Finished Training")
+
+    results = pd.DataFrame({
+        "Training episodes":evaluation_times,
+        "Mean episodic return":mean_episodes_return,
+        "Std episodic return":std_episodes_return,
+    })
+    return results
 
 
 def args_sanity_check(config, _log):
