@@ -21,9 +21,14 @@ class BasicMAC:
         avail_actions = ep_batch["avail_actions"][:, t_ep]
         agent_outputs = self.forward(ep_batch, t_ep, test_mode=test_mode)
         #try:
+        #print("agent_outputs", agent_outputs)
         chosen_actions, epsilon, pick_random = self.action_selector.select_action(agent_outputs[bs], avail_actions[bs], t_env, test_mode=test_mode)
         #except:
         #    chosen_actions = self.action_selector.select_action(agent_outputs[bs], avail_actions[bs], t_env, test_mode=test_mode)
+        #print("chosen_actions", chosen_actions)
+        #print("epsilon", epsilon)
+        #print("pick_random", pick_random)
+        chosen_actions, epsilon, pick_random
         return chosen_actions, epsilon, pick_random
 
     def forward(self, ep_batch, t, test_mode=False):
