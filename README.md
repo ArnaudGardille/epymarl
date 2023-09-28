@@ -44,7 +44,7 @@ To install the codebase, clone this repo and install the `requirements.txt`.
 
 pip install torch==2.0.0+cu118 torchvision==0.15.1+cu118 torchaudio==2.0.1 --index-url https://download.pytorch.org/whl/cu118
 
-pip install torch-scatter -f https://data.pyg.org/whl/torch-2.0.0+${cu118}.html
+pip install torch-scatter -f https://data.pyg.org/whl/torch-2.0.0+cu118.html
 ## Installing LBF, RWARE, and MPE
 
 In [Benchmarking Multi-Agent Deep Reinforcement Learning Algorithms in Cooperative Tasks](https://arxiv.org/abs/2006.07869) we introduce and benchmark algorithms in Level-Based Foraging, Multi-Robot Warehouse and Multi-agent Particle environments.
@@ -199,3 +199,7 @@ Any new code is also licensed under the Apache License v2.0
 
 
 tensorboard --logdir=/home/nono/Documents/Dassault/epymarl/results/tb_logs --port 6008
+!tensorboard --logdir=results/tb_logs --bind_all
+
+ python3 src/main.py --config=qmix --env-config=sc2 with env_args.map_name=2s3z batch_size=64 
+buffer_size=10000

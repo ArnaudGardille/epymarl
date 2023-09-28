@@ -1,6 +1,6 @@
 absl-py
 attrs
-gym==0.21.0
+gym==0.26.2
 idna
 imageio
 lbforaging
@@ -43,3 +43,6 @@ markdown
 tensorboard-plugin-wit
 werkzeug
 requests-oauthlib
+pandas
+torch==2.0.0+cu118 torchvision==0.15.1+cu118 torchaudio==2.0.1 --index-url https://download.pytorch.org/whl/cu118
+torch-scatter -f https://data.pyg.org/whl/torch-2.0.0+cu118.html
