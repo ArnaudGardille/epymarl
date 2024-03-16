@@ -1,4 +1,4 @@
-	# Extended Python MARL framework - EPyMARL
+# Extended Python MARL framework - EPyMARL
 
 EPyMARL is  an extension of [PyMARL](https://github.com/oxwhirl/pymarl), and includes
 - Additional algorithms (IA2C, IPPO, MADDPG, MAA2C and MAPPO)
@@ -11,9 +11,9 @@ See our blog post here: https://agents.inf.ed.ac.uk/blog/epymarl/
 
 
 ## Update as of *15th July 2023*!
-We have released our _Pareto Actor-Critic_ algorithm as part of the E-PyMARL source code. 
+We have released our _Pareto Actor-Critic_ algorithm, accepted in TMLR, as part of the E-PyMARL source code. 
 
-Find the preprint here: https://arxiv.org/abs/2209.14344
+Find the paper here: https://arxiv.org/abs/2209.14344
 
 Pareto-AC (Pareto-AC), is an actor-critic algorithm that utilises a simple principle of no-conflict games (and, in turn, cooperative games with identical rewards): each agent can assume the others will choose actions that will lead to a Pareto-optimal equilibrium.
 Pareto-AC works especially well in environments with multiple suboptimal equilibria (a problem is also known as relative over-generalisation). We have seen impressive results in a diverse set of multi-agent games with suboptimal equilibria, including the matrix games of the MARL benchmark, but also LBF variations with high penalties.
@@ -28,6 +28,7 @@ python main.py --config=pac_ns --env-config=gymma with env_args.time_limit=1 env
 - [Table of Contents](#table-of-contents)
 - [Installation & Run instructions](#installation--run-instructions)
   - [Installing LBF, RWARE, and MPE](#installing-lbf-rware-and-mpe)
+  - [Installing MARBLER for Sim2Real Evaluation](#installing-marbler)
   - [Using A Custom Gym Environment](#using-a-custom-gym-environment)
 - [Run an experiment on a Gym environment](#run-an-experiment-on-a-gym-environment)
 - [Run a hyperparameter search](#run-a-hyperparameter-search)
@@ -99,6 +100,14 @@ and
 python3 src/main.py --config=qmix --env-config=gymma with env_args.time_limit=25 env_args.key="mpe:SimpleTag-v0" env_args.pretrained_wrapper="PretrainedTag"
 ```
 
+## Installing MARBLER
+
+[MARBLER](https://github.com/GT-STAR-Lab/MARBLER) is a gym built for [the Robotarium](https://www.robotarium.gatech.edu) to enable free and effortless Sim2Real evaluation of algorithms. Clone it and follow the instructions on its Github to install it.
+
+Example of using MARBLER:
+```sh
+python3 src/main.py --config=qmix --env-config=gymma with env_args.time_limit=10000 env_args.key="robotarium_gym:PredatorCapturePrey-v0"
+```
 
 ## Using A Custom Gym Environment
 
